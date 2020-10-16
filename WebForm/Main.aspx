@@ -3,6 +3,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
     <asp:Label ID="Label1" runat="server" Text="Ready"></asp:Label>
+    <br />
     <asp:Label ID="Label2" runat="server"></asp:Label>
     <br />
     <asp:TextBox ID="TextBox1" runat="server" OnTextChanged="TextBox1_TextChanged">Select Directory</asp:TextBox>

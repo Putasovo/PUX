@@ -66,34 +66,41 @@ namespace FileChecker
             }
             else
             {
-                di = new DirectoryInfo(Server.MapPath(TextBox1.Text));
-                if (di.Exists)
+                try
                 {
-                    try
+                    di = new DirectoryInfo(Server.MapPath(TextBox1.Text));
+                    if (di.Exists)
                     {
-                        // kontrola pristupnosti
-                        DirectorySecurity accessControlList = di.GetAccessControl();
-                        if (selectedDirectory != TextBox1.Text)
+                        try
                         {
-                            // zaciname znovu
-                            File.WriteAllText(servermapped, TextBox1.Text);
-                            Page_Load(this, null);
+                            // kontrola pristupnosti
+                            DirectorySecurity accessControlList = di.GetAccessControl();
+                            if (selectedDirectory != TextBox1.Text)
+                            {
+                                // zaciname znovu
+                                File.WriteAllText(servermapped, TextBox1.Text);
+                                Page_Load(this, null);
+                            }
+
+                            selectedDirectory = TextBox1.Text;
+                        }
+                        catch (UnauthorizedAccessException)
+                        {
+                            Label1.Text = "Insufficient Permissions";
+
+                            return;
                         }
 
-                        selectedDirectory = TextBox1.Text;
+                        readyToAnalyze = true;
                     }
-                    catch (UnauthorizedAccessException)
+                    else
                     {
-                        Label1.Text = "Insufficient Permissions";
-
-                        return;
+                        Label1.Text = "Invalid Directory";
                     }
-
-                    readyToAnalyze = true;
                 }
-                else
+                catch(HttpException ex)
                 {
-                    Label1.Text = "Invalid Directory";
+                    Label1.Text = "Unreachable Directory?" + ex.Message;
                 }
             }
         }
